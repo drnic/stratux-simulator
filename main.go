@@ -78,6 +78,7 @@ func serveHome(w http.ResponseWriter, r *http.Request) {
 }
 
 func main() {
+	flag.Parse()
 	http.HandleFunc("/", serveHome)
 	http.HandleFunc("/traffic", serveTraffic)
 	if err := http.ListenAndServe(*addr, nil); err != nil {
