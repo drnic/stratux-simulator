@@ -66,11 +66,11 @@ func serveTraffic(w http.ResponseWriter, r *http.Request) {
 		traffic := TrafficReport{
 			IcaoAddr:      2837120,
 			OnGround:      false,
-			Lat:           42.193336,
-			Lng:           -83.92136,
+			Lat:           -27.57,  // S27°34.22' - YBAF
+			Lng:           152.997, // E152°59.83'
 			PositionValid: true,
 			Alt:           3400,
-			Track:         9,
+			Track:         158,
 			Speed:         92,
 			SpeedValid:    true,
 			Vvel:          0,
