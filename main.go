@@ -1,10 +1,7 @@
-// Copyright 2013 The Gorilla WebSocket Authors. All rights reserved.
-// Use of this source code is governed by a BSD-style
-// license that can be found in the LICENSE file.
-
 package main
 
 import (
+	"encoding/json"
 	"flag"
 	"html/template"
 	"log"
@@ -13,6 +10,21 @@ import (
 
 	"github.com/gorilla/websocket"
 )
+
+type StatusReport struct {
+	Version               string  `json:"Version"`
+	Devices               int     `json:"Devices"`
+	ConnectedUsers        int     `json:"Connected_Users"`
+	UATMessagesLastMinute int     `json:"UAT_messages_last_minute"`
+	UATMessagesMax        int     `json:"UAT_messages_max"`
+	ESMessagesLastMinute  int     `json:"ES_messages_last_minute"`
+	ESMessagesMax         int     `json:"ES_messages_max"`
+	GPSSatellitesLocked   int     `json:"GPS_satellites_locked"`
+	GPSConnected          bool    `json:"GPS_connected"`
+	GPSSolution           string  `json:"GPS_solution"`
+	Uptime                int     `json:"Uptime"`
+	CPUTemp               float64 `json:"CPUTemp"`
+}
 
 type TrafficReport struct {
 	IcaoAddr      int       `json:"Icao_addr"`
@@ -57,6 +69,26 @@ func serveTraffic(w http.ResponseWriter, r *http.Request) {
 
 }
 
+func serveStatus(w http.ResponseWriter, r *http.Request) {
+	w.Header().Set("Content-Type", "application/json")
+
+	statusReport := StatusReport{
+		Version:               "v0.5b1",
+		Devices:               0,
+		ConnectedUsers:        1,
+		ESMessagesLastMinute:  100,
+		ESMessagesMax:         500,
+		UATMessagesLastMinute: 0,
+		UATMessagesMax:        0,
+		GPSSatellitesLocked:   10,
+		GPSConnected:          true,
+		Uptime:                227068,
+		CPUTemp:               42.236,
+	}
+	status, _ := json.Marshal(statusReport)
+	w.Write([]byte(status))
+}
+
 func serveHome(w http.ResponseWriter, r *http.Request) {
 	if r.URL.Path != "/" {
 		http.Error(w, "Not found", 404)
@@ -80,6 +112,7 @@ func serveHome(w http.ResponseWriter, r *http.Request) {
 func main() {
 	flag.Parse()
 	http.HandleFunc("/", serveHome)
+	http.HandleFunc("/getStatus", serveStatus)
 	http.HandleFunc("/traffic", serveTraffic)
 	if err := http.ListenAndServe(*addr, nil); err != nil {
 		log.Fatal(err)
@@ -96,7 +129,7 @@ const homeHTML = `<!DOCTYPE html>
         <script type="text/javascript">
             (function() {
                 var data = document.getElementById("fileData");
-                var conn = new WebSocket("ws://{{.Host}}/traffic");
+                var conn = new WebSocket("ws:
                 conn.onclose = function(evt) {
                     data.textContent = 'Connection closed';
                 }
