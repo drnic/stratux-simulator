@@ -1,5 +1,12 @@
 # Stratux Simulator
 
+I wanted to build a little app that watches [Stratux](https://github.com/cyoung/stratux) web socket data, so this is a simple simulator to produce traffic. Stratux API documented at https://github.com/cyoung/stratux/blob/master/notes/app-vendor-integration.md
+
+Currently supports:
+
+* GET /getStatus
+* WS /traffic
+
 In one terminal:
 
 ```
