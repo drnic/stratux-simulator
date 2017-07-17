@@ -5,7 +5,10 @@ I wanted to build a little app that watches [Stratux](https://github.com/cyoung/
 Currently supports:
 
 * GET /getStatus
-* WS /traffic
+* GET /getSituation
+* WebSocket Upgrade /status
+* WebSocket Upgrade /situation
+* WebSocket Upgrade /traffic
 
 In one terminal:
 
