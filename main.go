@@ -61,9 +61,23 @@ func serveTraffic(w http.ResponseWriter, r *http.Request) {
 	}
 	defer ws.Close()
 
-	traffic := TrafficReport{}
 	for {
 		<-time.After(time.Second)
+		traffic := TrafficReport{
+			IcaoAddr:      2837120,
+			OnGround:      false,
+			Lat:           42.193336,
+			Lng:           -83.92136,
+			PositionValid: true,
+			Alt:           3400,
+			Track:         9,
+			Speed:         92,
+			SpeedValid:    true,
+			Vvel:          0,
+			Tail:          "",
+			LastSeen:      time.Now(),
+			LastSource:    2,
+		}
 		ws.WriteJSON(&traffic)
 	}
 
